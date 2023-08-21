@@ -20,4 +20,20 @@ class user_model():
         data=self.collection.find({'username':username})
         return data
 
+    def superuser(self,username,password):
+        self.collection=self.db['admin']
+        data=self.collection.insert_one({'username':username, 'password':password})
+        return data
+    
+    def verify_superuser_details(self,username,password):
+        self.collection=self.db['superuser']
+        data=self.collection.find({'username':username,'password':password})
+        return data
+
+    def all_superuser_details(self,data):
+        self.collection=self.db['admin']
+        data=self.collection.find()
+        return data
+
+
         

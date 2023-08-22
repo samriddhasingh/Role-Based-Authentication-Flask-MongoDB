@@ -39,7 +39,6 @@ class user_model():
             data=self.admindata.find({'username':username})
             return data
         if role=='user':
-            print('User role verified')
             data=self.userdata.find({'username':username})
             return data
 

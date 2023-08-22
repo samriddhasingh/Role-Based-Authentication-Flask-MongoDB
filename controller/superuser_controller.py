@@ -2,8 +2,8 @@ from app import app
 from flask import request,render_template,session,redirect,url_for,flash
 from model.user_model import user_model
 from functools import wraps
-
 obj=user_model()
+
 ROLES = {
     'superuser': ['create_admin'],
     'admin': ['create_user'],
@@ -23,32 +23,45 @@ def role_required(roles):
         return wrapper
     return decorator
 
-@app.route('/user',methods=['GET', 'POST'])
-def user():
+
+
+
+@app.route('/superuser',methods=['GET', 'POST'])
+def superuser():
     if request.method=='POST':
         username=request.form.get('username')
         password=request.form.get('password')
-        department=request.form.get('department')
-        print(username,password,department)
-        data,department_admin=obj.user(username,password,department)
+        data=obj.superuser(username,password)
         print(data)
         if data:
             session['username']=data['username']
-            session['role']='user'
-            session['department']=data['department']
-            session['department_admin']=department_admin
+            session['role']='superuser'
             print(session['username'])
-            return redirect(url_for('user_dashboard'))
+            return redirect(url_for('superuser_dashboard'))
         else:
             flash('Username or password incorrect please type correctly!!','error')
-    return render_template('userlogin.html')
+    return render_template('login.html')
     
 
-@app.route('/user_dashboard',methods=['GET', 'POST'])
-@role_required(['user'])
-def user_dashboard():
-    username=session['username']
-    department=session['department']
-    department_admin=session['department_admin']
-    return render_template('userdashboard.html',username=username,department=department,departmentadmin=department_admin)
+@app.route('/superuser_dashboard',methods=['GET', 'POST'])
+@role_required(['superuser'])
+def superuser_dashboard():
+    
+    admindata,userdata=obj.superuserdetails()
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        department=request.form.get('department')
 
+
+        msg=obj.createadmin(username,password,department)
+
+
+        flash(msg,'success')
+        return render_template('dashboard.html',admindata=admindata,userdata=userdata)
+    return render_template('dashboard.html',admindata=admindata,userdata=userdata)
+
+
+
+
+    

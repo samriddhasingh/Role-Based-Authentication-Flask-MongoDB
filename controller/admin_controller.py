@@ -23,32 +23,36 @@ def role_required(roles):
         return wrapper
     return decorator
 
-@app.route('/user',methods=['GET', 'POST'])
-def user():
+@app.route('/admin',methods=['GET', 'POST'])
+
+def admin():
     if request.method=='POST':
         username=request.form.get('username')
         password=request.form.get('password')
-        department=request.form.get('department')
-        print(username,password,department)
-        data,department_admin=obj.user(username,password,department)
-        print(data)
+        data=obj.admin(username,password)
         if data:
             session['username']=data['username']
-            session['role']='user'
+            session['role']='admin'
             session['department']=data['department']
-            session['department_admin']=department_admin
-            print(session['username'])
-            return redirect(url_for('user_dashboard'))
+            return redirect(url_for('admindashboard'))
         else:
             flash('Username or password incorrect please type correctly!!','error')
-    return render_template('userlogin.html')
-    
+    return render_template('adminlogin.html')
 
-@app.route('/user_dashboard',methods=['GET', 'POST'])
-@role_required(['user'])
-def user_dashboard():
-    username=session['username']
+
+@app.route('/admindashboard',methods=['GET', 'POST'])
+@role_required(['admin'])
+def admindashboard():
     department=session['department']
-    department_admin=session['department_admin']
-    return render_template('userdashboard.html',username=username,department=department,departmentadmin=department_admin)
+    userdata=obj.userdetails(session['department'])
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        department=session['department']
 
+        msg=obj.createuser(username,password,department)
+
+
+        flash(msg,'success')
+        return render_template('admindashboard.html',userdata=userdata,department=department,username=session['username'])
+    return render_template('admindashboard.html',userdata=userdata,department=department,username=session['username'])

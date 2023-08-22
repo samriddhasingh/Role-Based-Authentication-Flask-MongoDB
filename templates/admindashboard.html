@@ -42,15 +42,19 @@
 </head>
 <body>
     <div class="login-box">
-        <h2>SuperUserLogin</h2>
+        <h2>Hello  {{username}} admin of {{department}} </h2>
         {% for mesg in get_flashed_messages() %}
         <h1>{{ mesg }}</h1>
         {% endfor %}
+        
+        <h4>Add-Users Admin</h4>
         <form method="post">
             <input class="login-input" type="text" name="username" placeholder="Username" required>
+    
             <input class="login-input" type="password" name="password" placeholder="Password" required>
-            <button class="login-button" type="submit">Login</button>
+            <button class="login-button" type="submit">Add-users</button>
         </form>
+        No of Active users in your depart:-{{userdata}}
     </div>
 </body>
 </html>

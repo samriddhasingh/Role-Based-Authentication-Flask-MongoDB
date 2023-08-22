@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,19 +41,20 @@
     </style>
 </head>
 <body>
-    {{}}
     <div class="login-box">
-        {%for i in data%}
-        {{i.username}}
-        {{i.department}}
-        {%endfor%}
-        <h2>Add admins</h2>
+        <h2>Welcome Superuser </h2>
+        <h4></h4>
+        {% for mesg in get_flashed_messages() %}
+        <h1>{{ mesg }}</h1>
+        {% endfor %}
         <form method="post">
             <input class="login-input" type="text" name="username" placeholder="Username" required>
+            <input class="login-input" type="text" name="department" placeholder="department" required>
             <input class="login-input" type="password" name="password" placeholder="Password" required>
-            <input class="login-input" type="email" name="email" placeholder="email" required>
-            <button class="login-button" type="submit">Login</button>
+            <button class="login-button" type="submit">Add-Users</button>
         </form>
+        NO of active admins :-{{admindata}}
+        No of Active users in all departments :-{{userdata}}
     </div>
 </body>
 </html>
